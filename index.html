@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WTI Customer Support Chat</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(120deg, #d4e4ff, #e9f0ff);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            width: 480px;
+            height: 720px;
+            background: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: zoomIn 0.4s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #1a3260;
+        }
+
+        .chat-header .title {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-header .options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-header .options span {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 5px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-header .options span:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 25px;
+            overflow-y: scroll;
+            background: #f7f9fc;
+            height: 520px;
+        }
+
+        .chat-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-body::-webkit-scrollbar-track {
+            background: #e4e9f0;
+            border-radius: 10px;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb {
+            background: #2a5298;
+            border-radius: 10px;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb:hover {
+            background: #1e3c72;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-end;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-text {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.user .message-text {
+            background: #2a5298;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot .message-text {
+            background: #e4e9f0;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.bot .message-text::before {
+            content: "WTI Support Bot";
+            font-size: 11px;
+            color: #555;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .chat-footer {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-top: 4px solid #1a3260;
+            color: #fff;
+        }
+
+        .chat-footer .input-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            outline: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .chat-footer input:focus {
+            background: #fff;
+        }
+
+        .chat-footer button {
+            padding: 12px 30px;
+            background: #fff;
+            color: #2a5298;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .chat-footer button:hover {
+            background: #e0e4ff;
+            transform: scale(1.05);
+        }
+
+        .chat-footer .footer-info {
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .chat-footer .footer-info a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .chat-footer .footer-info a:hover {
+            color: #e0e4ff;
+            text-decoration: underline;
+        }
+
+        .typing-indicator {
+            font-size: 13px;
+            color: #777;
+            padding: 10px 25px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="title">WTI Customer Support</div>
+            <div class="options">
+                <span>Live Agent</span>
+                <span>Close</span>
+            </div>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="message bot">
+                <div class="message-text">Greetings! Welcome to WTI Customer Support. How can I assist you today? (Type 'redirect' to visit webtechinfinity.com)</div>
+            </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">WTI Support Bot is typing...</div>
+        <div class="chat-footer">
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="Ask us anything...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+            <div class="footer-info">Powered by <a href="https://webtechinfinity.com" target="_blank">webtechinfinity.com</a></div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const chatBody = document.getElementById('chatBody');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const message = userInput.value.trim();
+
+            if (message === '') return;
+
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user');
+            userMessage.innerHTML = `<div class="message-text">${message}</div>`;
+            chatBody.appendChild(userMessage);
+
+            // Check for redirect command
+            if (message.toLowerCase() === 'redirect') {
+                const botMessage = document.createElement('div');
+                botMessage.classList.add('message', 'bot');
+                botMessage.innerHTML = `<div class="message-text">Redirecting you to webtechinfinity.com...</div>`;
+                chatBody.appendChild(botMessage);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                setTimeout(() => {
+                    window.location.href = 'https://webtechinfinity.com';
+                }, 1000); // Redirect after 1 second
+                return;
+            }
+
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Simulate bot response
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                const botMessage = document.createElement('div');
+                botMessage.classList.add('message', 'bot');
+                botMessage.innerHTML = `<div class="message-text">Thanks for your query! How can I assist you further?</div>`;
+                chatBody.appendChild(botMessage);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1200);
+
+            // Clear input
+            userInput.value = '';
+        }
+
+        // Send message on Enter key press
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
